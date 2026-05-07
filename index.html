@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Chat Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      height: 90vh;
+      background: #fff;
+      border-radius: 25px;
+      overflow: hidden;
+      display: flex;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: #111c44;
+      color: white;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .new-chat {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      background: #ffb6c1;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 25px;
+      transition: 0.3s;
+    }
+
+    .new-chat:hover {
+      background: #ff9aae;
+    }
+
+    .menu {
+      list-style: none;
+    }
+
+    .menu li {
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .menu li:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .upgrade-box {
+      background: rgba(255,255,255,0.1);
+      padding: 18px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .upgrade-box button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #ffb6c1;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Chat History */
+    .history {
+      width: 320px;
+      background: #f8fafc;
+      border-right: 1px solid #ddd;
+      padding: 25px;
+      overflow-y: auto;
+    }
+
+    .history-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .history-top h2 {
+      font-size: 22px;
+      color: #333;
+    }
+
+    .history-top button {
+      padding: 8px 14px;
+      border: none;
+      background: #e5e7eb;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .search {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+      outline: none;
+    }
+
+    .chat-card {
+      background: white;
+      padding: 16px;
+      border-radius: 18px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+      border: 1px solid transparent;
+    }
+
+    .chat-card:hover {
+      background: #f3f4f6;
+    }
+
+    .active-chat {
+      background: #ffe4ec;
+      border: 1px solid #ffb6c1;
+    }
+
+    .chat-card h3 {
+      color: #222;
+      margin-bottom: 5px;
+    }
+
+    .chat-card p {
+      font-size: 13px;
+      color: #777;
+    }
+
+    /* Main Chat */
+    .main-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #fcfcfd;
+    }
+
+    .chat-header {
+      padding: 25px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+    }
+
+    .chat-header h1 {
+      font-size: 28px;
+      color: #222;
+    }
+
+    .chat-header p {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .profile {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: #ffd1dc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+    }
+
+    .messages {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 18px;
+      border-radius: 22px;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    .bot {
+      background: white;
+      border: 1px solid #ddd;
+      align-self: flex-start;
+    }
+
+    .user {
+      background: #ffe4ec;
+      align-self: flex-end;
+    }
+
+    .actions {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #777;
+      display: flex;
+      gap: 12px;
+    }
+
+    .chat-input {
+      padding: 20px;
+      border-top: 1px solid #ddd;
+      display: flex;
+      gap: 15px;
+      background: white;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .chat-input button {
+      padding: 16px 30px;
+      border: none;
+      border-radius: 14px;
+      background: #111c44;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .chat-input button:hover {
+      background: #1c2c6d;
+    }
+
+    @media(max-width: 1000px) {
+      .history {
+        display: none;
+      }
+    }
+
+    @media(max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .main-chat {
+        width: 100%;
+      }
+
+      .message {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div>
+        <div class="logo">🤖 CHATBOT</div>
+
+        <button class="new-chat">+ Chat Generate</button>
+
+        <ul class="menu">
+          <li>📋 Feedback</li>
+          <li>📚 Prompt Library</li>
+          <li>🤖 My Bots</li>
+          <li>⭐ Favorites</li>
+          <li>🕒 History</li>
+          <li>⚙ Settings</li>
+        </ul>
+      </div>
+
+      <div class="upgrade-box">
+        <p>Upgrade to Pro</p>
+        <button>Upgrade</button>
+      </div>
+    </div>
+
+    <!-- Chat History -->
+    <div class="history">
+      <div class="history-top">
+        <h2>Chat History</h2>
+        <button>+ New</button>
+      </div>
+
+      <input type="text" class="search" placeholder="Search chats...">
+
+      <div class="chat-card">
+        <h3>Chat Generator</h3>
+        <p>Last updated 5 mins ago</p>
+      </div>
+
+      <div class="chat-card active-chat">
+        <h3>Design Thinking</h3>
+        <p>Last updated 2 mins ago</p>
+      </div>
+
+      <div class="chat-card">
+        <h3>E-Commerce Website</h3>
+        <p>Last updated 8 mins ago</p>
+      </div>
+
+      <div class="chat-card">
+        <h3>Project Ideas</h3>
+        <p>Last updated 15 mins ago</p>
+      </div>
+    </div>
+
+    <!-- Main Chat -->
+    <div class="main-chat">
+
+      <div class="chat-header">
+        <div>
+          <h1>Design Thinking</h1>
+          <p>AI-powered conversation assistant</p>
+        </div>
+
+        <div class="profile">S</div>
+      </div>
+
+      <div class="messages" id="messages">
+
+        <div class="message bot">
+          Design thinking is a problem-solving approach focused on empathy, creativity, and innovation.
+          <div class="actions">
+            <span>👍 Like</span>
+            <span>📋 Copy</span>
+          </div>
+        </div>
+
+        <div class="message user">
+          What are the key principles of design thinking?
+        </div>
+
+      </div>
+
+      <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Ask anything...">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById('userInput');
+      const messages = document.getElementById('messages');
+
+      if(input.value.trim() === '') {
+        return;
+      }
+
+      // User Message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'message user';
+      userMsg.innerText = input.value;
+      messages.appendChild(userMsg);
+
+      // Bot Reply
+      setTimeout(() => {
+        const botMsg = document.createElement('div');
+        botMsg.className = 'message bot';
+        botMsg.innerHTML = `
+          This is a sample AI response for: "${input.value}".
+          <div class="actions">
+            <span>👍 Like</span>
+            <span>📋 Copy</span>
+          </div>
+        `;
+        messages.appendChild(botMsg);
+
+        messages.scrollTop = messages.scrollHeight;
+      }, 700);
+
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+    }
+  </script>
+
+</body>
+</html>
